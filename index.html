@@ -4,73 +4,27 @@
   <meta charset="UTF-8">
   <title>Dildos Drop (localStorage)</title>
   <style>
-    body {
-      font-family: Arial;
-      text-align: center;
-      margin-top: 50px;
-      background: #1e1e2f;
-      color: white;
-    }
-    button {
-      padding: 14px 28px;
-      margin: 10px;
-      border: none;
-      border-radius: 10px;
-      background: #ff6b6b;
-      color: white;
-      font-size: 18px;
-      font-weight: bold;
-      cursor: pointer;
-    }
+    body { font-family: Arial; text-align: center; margin-top: 50px; background: #1e1e2f; color: white; }
+    button { padding: 14px 28px; margin: 10px; border: none; border-radius: 10px; background: #ff6b6b; color: white; font-size: 18px; font-weight: bold; cursor: pointer; }
     button:hover { background: #ee5a24; }
-    .admin-btn {
-      background: #4a4a8a;
-    }
+    .admin-btn { background: #4a4a8a; }
     .admin-btn:hover { background: #6a6aaa; }
-    pre {
-      background: #2d2d44;
-      padding: 20px;
-      border-radius: 12px;
-      max-width: 400px;
-      margin: 25px auto;
-      text-align: left;
-      color: #a8d8ea;
-    }
+    pre { background: #2d2d44; padding: 20px; border-radius: 12px; max-width: 400px; margin: 25px auto; text-align: left; color: #a8d8ea; }
     .admin-panel {
       display: none;
       background: #2a2a3f;
       padding: 20px;
       border-radius: 12px;
-      max-width: 600px;
+      max-width: 700px;
       margin: 20px auto;
       border: 2px solid #ff6b6b;
       text-align: left;
     }
-    .admin-panel table {
-      width: 100%;
-      border-collapse: collapse;
-      color: white;
-    }
-    .admin-panel th, .admin-panel td {
-      padding: 8px;
-      border-bottom: 1px solid #444;
-      text-align: left;
-    }
-    .admin-panel th {
-      background: #3a3a5a;
-    }
-    .admin-panel input {
-      padding: 8px;
-      margin: 5px;
-      border-radius: 8px;
-      border: none;
-      width: 120px;
-    }
-    .admin-panel button {
-      padding: 8px 16px;
-      font-size: 14px;
-      background: #4CAF50;
-    }
+    .admin-panel table { width: 100%; border-collapse: collapse; color: white; }
+    .admin-panel th, .admin-panel td { padding: 8px; border-bottom: 1px solid #444; text-align: left; }
+    .admin-panel th { background: #3a3a5a; }
+    .admin-panel input { padding: 8px; margin: 5px; border-radius: 8px; border: none; width: 120px; }
+    .admin-panel button { padding: 8px 16px; font-size: 14px; }
     .modal {
       display: flex;
       align-items: center;
@@ -88,22 +42,10 @@
       color: white;
       max-width: 350px;
     }
-    .modal-content input {
-      padding: 12px;
-      border-radius: 8px;
-      border: none;
-      width: 80%;
-      font-size: 16px;
-      margin: 10px 0;
-    }
-    .modal-content button {
-      background: #4CAF50;
-      padding: 12px 30px;
-    }
-    #playerNameDisplay {
-      font-size: 20px;
-      color: #ff6b6b;
-    }
+    .modal-content input { padding: 12px; border-radius: 8px; border: none; width: 80%; font-size: 16px; margin: 10px 0; }
+    .modal-content button { background: #4CAF50; padding: 12px 30px; }
+    #playerNameDisplay { font-size: 20px; color: #ff6b6b; }
+    .file-input-wrapper { margin: 10px 0; }
   </style>
 </head>
 <body>
@@ -115,17 +57,13 @@
   <button id="addBtn">➕ Начислить 100 монет</button>
   <pre id="output">Здесь будет результат...</pre>
 
-  <!-- Кнопка для открытия админ-панели -->
   <button class="admin-btn" id="adminToggle">🔐 Админ-панель</button>
 
-  <!-- Админ-панель -->
   <div class="admin-panel" id="adminPanel">
     <h3 style="color: #ff6b6b;">🔧 Админ-панель</h3>
-    <p style="font-size: 14px; color: #aaa;">Список всех игроков и их баланс</p>
+    <p style="font-size: 14px; color: #aaa;">Список всех игроков (только в этом браузере)</p>
     <table id="userTable">
-      <thead>
-        <tr><th>Имя</th><th>ID</th><th>Баланс</th><th>Действие</th></tr>
-      </thead>
+      <thead><tr><th>Имя</th><th>ID</th><th>Баланс</th><th>Действие</th></tr></thead>
       <tbody id="userTableBody"></tbody>
     </table>
     <br>
@@ -133,14 +71,21 @@
       <input type="text" id="adminUserId" placeholder="ID игрока" style="width:200px;">
       <input type="number" id="adminBalance" placeholder="Новый баланс">
       <button id="adminSetBtn" style="background:#4CAF50;">Установить</button>
-      <button id="adminRefreshBtn" style="background:#2196F3;">Обновить список</button>
+      <button id="adminRefreshBtn" style="background:#2196F3;">Обновить</button>
+    </div>
+    <br>
+    <div class="file-input-wrapper">
+      <button id="exportBtn" style="background:#ff9800;">📤 Экспорт всех данных (JSON)</button>
+      <button id="importBtn" style="background:#9c27b0;">📥 Импорт из файла</button>
+      <input type="file" id="fileInput" accept=".json" style="display:none;">
+      <span style="font-size:12px;color:#aaa;margin-left:10px;">(можно переносить данные между браузерами)</span>
     </div>
     <br>
     <button id="adminResetBtn" style="background:#f44336;">Сбросить ВСЕ данные</button>
     <p id="adminStatus" style="color:#a8d8ea; font-size:14px;"></p>
   </div>
 
-  <!-- Модальное окно для ввода имени -->
+  <!-- Модальное окно для имени -->
   <div class="modal" id="nameModal">
     <div class="modal-content">
       <h2>👋 Добро пожаловать!</h2>
@@ -152,131 +97,74 @@
   </div>
 
   <script>
-    // --- Константы ---
     const STORAGE_KEY = 'dildos_drop_users';
     const CURRENT_USER_KEY = 'dildos_drop_current_user';
 
-    // --- Функции работы с localStorage ---
-    function getUsers() {
-      const data = localStorage.getItem(STORAGE_KEY);
-      return data ? JSON.parse(data) : {};
-    }
+    function getUsers() { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); }
+    function saveUsers(users) { localStorage.setItem(STORAGE_KEY, JSON.stringify(users)); }
+    function getCurrentUser() { return JSON.parse(localStorage.getItem(CURRENT_USER_KEY) || 'null'); }
+    function saveCurrentUser(userId, name) { localStorage.setItem(CURRENT_USER_KEY, JSON.stringify({ userId, name })); }
 
-    function saveUsers(users) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(users));
-    }
-
-    function getCurrentUser() {
-      const data = localStorage.getItem(CURRENT_USER_KEY);
-      return data ? JSON.parse(data) : null;
-    }
-
-    function saveCurrentUser(userId, name) {
-      localStorage.setItem(CURRENT_USER_KEY, JSON.stringify({ userId, name }));
-    }
-
-    // --- Получение баланса пользователя по ID ---
-    function getUserBalance(userId) {
-      const users = getUsers();
-      return users[userId] ? users[userId].balance : 0;
-    }
-
-    // --- Установка баланса пользователя ---
+    function getUserBalance(userId) { const users = getUsers(); return users[userId] ? users[userId].balance : 0; }
     function setUserBalance(userId, balance) {
       const users = getUsers();
-      if (!users[userId]) {
-        users[userId] = { name: 'Неизвестный', balance: 0 };
-      }
+      if (!users[userId]) users[userId] = { name: 'Неизвестный', balance: 0 };
       users[userId].balance = balance;
       saveUsers(users);
     }
-
-    // --- Установка имени пользователя ---
     function setUserName(userId, name) {
       const users = getUsers();
-      if (!users[userId]) {
-        users[userId] = { name: name, balance: 0 };
-      } else {
-        users[userId].name = name;
-      }
+      if (!users[userId]) users[userId] = { name: name, balance: 0 };
+      else users[userId].name = name;
       saveUsers(users);
     }
+    function userExists(userId) { const users = getUsers(); return !!users[userId]; }
 
-    // --- Проверка, существует ли пользователь ---
-    function userExists(userId) {
-      const users = getUsers();
-      return !!users[userId];
-    }
-
-    // --- Текущий пользователь ---
     let currentUser = getCurrentUser();
     let currentUserId = currentUser ? currentUser.userId : null;
     let currentName = currentUser ? currentUser.name : null;
 
-    // --- Модальное окно ---
     const modal = document.getElementById('nameModal');
     const nameInput = document.getElementById('nameInput');
     const nameSubmitBtn = document.getElementById('nameSubmitBtn');
 
-    // Если пользователь уже есть, скрываем модалку
     if (currentUser && currentUser.userId) {
       modal.style.display = 'none';
       document.getElementById('playerName').textContent = currentName;
     } else {
-      // Ждём ввода имени
       modal.style.display = 'flex';
       nameInput.focus();
-
       nameSubmitBtn.addEventListener('click', function() {
         const name = nameInput.value.trim();
-        if (name.length < 2) {
-          alert('Введи имя (минимум 2 символа)');
-          return;
-        }
-        // Генерируем ID
+        if (name.length < 2) { alert('Введи имя (минимум 2 символа)'); return; }
         const userId = 'user_' + Math.random().toString(36).substring(2, 10);
-        // Сохраняем
         setUserName(userId, name);
         saveCurrentUser(userId, name);
-        currentUserId = userId;
-        currentName = name;
+        currentUserId = userId; currentName = name;
         document.getElementById('playerName').textContent = name;
         modal.style.display = 'none';
-        // Показываем баланс
         updateBalanceDisplay();
       });
-
-      // Возможность нажать Enter
-      nameInput.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') {
-          nameSubmitBtn.click();
-        }
-      });
+      nameInput.addEventListener('keydown', function(e) { if (e.key === 'Enter') nameSubmitBtn.click(); });
     }
 
-    // --- Функция обновления отображения баланса ---
     function updateBalanceDisplay() {
       if (!currentUserId) return;
-      const balance = getUserBalance(currentUserId);
-      document.getElementById('output').textContent = `💰 Ваш баланс: ${balance} монет`;
+      document.getElementById('output').textContent = `💰 Ваш баланс: ${getUserBalance(currentUserId)} монет`;
     }
 
-    // --- Основные функции игрока ---
     function getBalance() {
       if (!currentUserId) return alert('Сначала введи имя');
-      const balance = getUserBalance(currentUserId);
-      document.getElementById('output').textContent = `💰 Ваш баланс: ${balance} монет`;
+      document.getElementById('output').textContent = `💰 Ваш баланс: ${getUserBalance(currentUserId)} монет`;
     }
 
     function addCoins() {
       if (!currentUserId) return alert('Сначала введи имя');
-      const currentBalance = getUserBalance(currentUserId);
-      const newBalance = currentBalance + 100;
+      const newBalance = getUserBalance(currentUserId) + 100;
       setUserBalance(currentUserId, newBalance);
       document.getElementById('output').textContent = `💰 Новый баланс: ${newBalance} монет (начислено 100)`;
     }
 
-    // --- Админ-панель: обновить список пользователей ---
     function renderUserTable() {
       const users = getUsers();
       const tbody = document.getElementById('userTableBody');
@@ -291,89 +179,103 @@
         `;
         tbody.appendChild(tr);
       }
-      // Навешиваем обработчики на кнопки "Выбрать"
       document.querySelectorAll('.adminSelectBtn').forEach(btn => {
         btn.addEventListener('click', function() {
           const id = this.getAttribute('data-id');
           document.getElementById('adminUserId').value = id;
-          // подставить текущий баланс в поле
           const users = getUsers();
-          if (users[id]) {
-            document.getElementById('adminBalance').value = users[id].balance;
-          }
+          if (users[id]) document.getElementById('adminBalance').value = users[id].balance;
           document.getElementById('adminStatus').textContent = `Выбран игрок ${id}`;
         });
       });
     }
 
-    // --- Админ-панель: установка баланса выбранному пользователю ---
     function adminSetBalance() {
       const userId = document.getElementById('adminUserId').value.trim();
       const balance = parseInt(document.getElementById('adminBalance').value);
-      if (!userId) {
-        document.getElementById('adminStatus').textContent = '❌ Введи ID игрока';
-        return;
-      }
-      if (isNaN(balance) || balance < 0) {
-        document.getElementById('adminStatus').textContent = '❌ Введи корректный баланс (число >= 0)';
-        return;
-      }
-      if (!userExists(userId)) {
-        document.getElementById('adminStatus').textContent = '❌ Пользователь с таким ID не найден';
-        return;
-      }
+      if (!userId) { document.getElementById('adminStatus').textContent = '❌ Введи ID'; return; }
+      if (isNaN(balance) || balance < 0) { document.getElementById('adminStatus').textContent = '❌ Некорректный баланс'; return; }
+      if (!userExists(userId)) { document.getElementById('adminStatus').textContent = '❌ Пользователь не найден'; return; }
       setUserBalance(userId, balance);
-      document.getElementById('adminStatus').textContent = `✅ Баланс пользователя установлен на ${balance}`;
-      renderUserTable(); // обновить таблицу
-      // Если это текущий пользователь — обновить его отображение
-      if (userId === currentUserId) {
-        updateBalanceDisplay();
-      }
+      document.getElementById('adminStatus').textContent = `✅ Баланс установлен на ${balance}`;
+      renderUserTable();
+      if (userId === currentUserId) updateBalanceDisplay();
     }
 
-    // --- Админ-панель: сброс всех данных ---
     function adminResetAll() {
-      if (confirm('Точно сбросить ВСЕ данные всех пользователей?')) {
+      if (confirm('Точно сбросить ВСЕ данные?')) {
         localStorage.removeItem(STORAGE_KEY);
-        // Если текущий пользователь есть — восстановить его с именем
-        if (currentUserId && currentName) {
-          setUserName(currentUserId, currentName);
-          setUserBalance(currentUserId, 0);
-        }
+        if (currentUserId && currentName) { setUserName(currentUserId, currentName); setUserBalance(currentUserId, 0); }
         renderUserTable();
         document.getElementById('adminStatus').textContent = '✅ Все данные сброшены';
         if (currentUserId) updateBalanceDisplay();
       }
     }
 
-    // --- Переключение админ-панели ---
+    // --- Экспорт ---
+    function exportData() {
+      const users = getUsers();
+      const dataStr = JSON.stringify(users, null, 2);
+      const blob = new Blob([dataStr], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'dildos_drop_backup.json';
+      a.click();
+      URL.revokeObjectURL(url);
+      document.getElementById('adminStatus').textContent = '✅ Данные экспортированы';
+    }
+
+    // --- Импорт ---
+    function importData(file) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const imported = JSON.parse(e.target.result);
+          if (typeof imported !== 'object') throw new Error('Неверный формат');
+          // Проверяем, что структура похожа на { userId: { name, balance } }
+          for (const key of Object.keys(imported)) {
+            if (!imported[key].hasOwnProperty('balance')) throw new Error('Нет поля balance');
+          }
+          // Сохраняем
+          saveUsers(imported);
+          renderUserTable();
+          document.getElementById('adminStatus').textContent = `✅ Импортировано ${Object.keys(imported).length} пользователей`;
+          if (currentUserId && userExists(currentUserId)) updateBalanceDisplay();
+        } catch(err) {
+          document.getElementById('adminStatus').textContent = '❌ Ошибка импорта: ' + err.message;
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    // --- Переключение админки ---
     let adminVisible = false;
     document.getElementById('adminToggle').addEventListener('click', function() {
       adminVisible = !adminVisible;
       document.getElementById('adminPanel').style.display = adminVisible ? 'block' : 'none';
-      if (adminVisible) {
-        renderUserTable(); // обновить список при открытии
-      }
+      if (adminVisible) renderUserTable();
     });
 
-    // --- Привязка кнопок админки ---
     document.getElementById('adminSetBtn').addEventListener('click', adminSetBalance);
     document.getElementById('adminRefreshBtn').addEventListener('click', renderUserTable);
     document.getElementById('adminResetBtn').addEventListener('click', adminResetAll);
+    document.getElementById('exportBtn').addEventListener('click', exportData);
+    document.getElementById('importBtn').addEventListener('click', function() { document.getElementById('fileInput').click(); });
+    document.getElementById('fileInput').addEventListener('change', function(e) {
+      if (this.files.length > 0) {
+        importData(this.files[0]);
+        this.value = ''; // сбросить для повторного выбора
+      }
+    });
 
-    // --- Основные кнопки ---
     document.getElementById('getBtn').addEventListener('click', getBalance);
     document.getElementById('addBtn').addEventListener('click', addCoins);
 
-    // --- При загрузке ---
     window.addEventListener('load', function() {
       if (currentUserId) {
+        if (!userExists(currentUserId)) { setUserName(currentUserId, currentName); setUserBalance(currentUserId, 0); }
         updateBalanceDisplay();
-        // Если есть пользователь, но он не сохранён в users с именем — исправить
-        if (!userExists(currentUserId)) {
-          setUserName(currentUserId, currentName);
-          setUserBalance(currentUserId, 0);
-        }
       }
     });
   </script>
